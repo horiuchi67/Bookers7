@@ -18,6 +18,19 @@ class User < ApplicationRecord
   def followed_by?(user)
     passive_relationships.find_by(following_id: user.id).present?
   end
+  def self.search(method,word)
+                if method == "forward_match"
+                        @posts = User.where("name LIKE?","#{word}%")
+                elsif method == "backward_match"
+                        @posts = User.where("name LIKE?","%#{word}")
+                elsif method == "perfect_match"
+                        @posts = User.where(name: "#{word}")
+                elsif method == "partial_match"
+                        @posts = User.where("name LIKE?","%#{word}%")
+                else
+                        @posts = User.all
+                end
+    end
 
   #登録時にメールアドレスを不要とする
   def email_required?
